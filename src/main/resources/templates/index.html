@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${storeTitle}">Магазин Строительных Материалов</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a th:href="@{/}">Главная</a></li>
+            <li><a th:href="@{/products}">Каталог материалов</a></li>
+            <li><a th:href="@{/about}">О магазине</a></li>
+            <li><a th:href="@{/contact}">Контакты</a></li>
+        </ul>
+    </nav>
+    <h1 th:text="${storeTitle}">Заголовок Магазина</h1>
+</header>
+
+<section class="welcome-section">
+    <h2>Добро пожаловать!</h2>
+    <p th:text="${welcomeMessage}">Приветственное сообщение</p>
+</section>
+
+<section class="materials-section">
+    <h2>Наши строительные материалы</h2>
+    <ul>
+        <li th:each="material : ${productList}">
+            <span th:text="${material.getName}">Название материала</span> -
+            <span th:text="${material.getPrice}">Цена: </span><span th:text="${material.price}">Цена материала</span> ₽
+            <p th:text="${material.getDescription}">Описание материала</p>
+        </li>
+        <li th:if="${#lists.isEmpty(productList)}">Нет доступных материалов</li>
+    </ul>
+</section>
+
+<section class="about-section">
+    <h2>О нас</h2>
+    <p>Мы предлагаем качественные строительные материалы по выгодным ценам. Наши товары подойдут как для профессиональных строителей, так и для домашних мастеров.</p>
+    <p><a th:href="@{/about}">Узнать больше о нашем магазине</a></p>
+</section>
+
+<footer>
+    <p>© 2024 Магазин Строительных Материалов</p>
+    <p><a th:href="@{/contact}">Свяжитесь с нами</a></p>
+</footer>
+</body>
+</html>
