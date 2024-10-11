@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оформление заказа</title>
+    <link rel="stylesheet" href="/stylesOrder.css">
+    <script src="/order.js" defer></script>
+</head>
+<body>
+<header>
+    <h1>Оформление заказа</h1>
+</header>
+
+<main>
+    <section>
+        <form method="POST" th:action="@{/order/submit}" th:object="${order}">
+            <input type="hidden" th:field="*{orderMaterialId}">
+            <h2 th:text="${material.name}">Название материала</h2>
+            <p th:text="${material.description}">Описание материала</p>
+            <p th:text="'Вес: ' + ${material.weight} + ' кг'">Вес материала</p>
+            <p id="materialPrice" th:text="'Цена: ' + ${material.price} + ' ₽'">Цена материала</p>
+
+            <div>
+                <label for="quantity">Количество:</label>
+                <input type="number" id="quantity" th:field="*{quantity}" required oninput="updateTotalPrice()" />
+                <span class="validationError"
+                      th:if="${#fields.hasErrors('quantity')}"
+                      th:errors="*{quantity}">Ошибка количества</span>
+                <br/>
+            </div>
+
+            <div>
+                <label for="customerName">Имя:</label>
+                <input type="text" id="customerName" th:field="*{customerName}" required />
+                <span class="validationError"
+                      th:if="${#fields.hasErrors('customerName')}"
+                      th:errors="*{customerName}">Ошибка имени</span>
+                <br/>
+            </div>
+
+            <div>
+                <label for="address">Адрес:</label>
+                <input type="text" id="address" th:field="*{address}" required />
+                <span class="validationError"
+                      th:if="${#fields.hasErrors('address')}"
+                      th:errors="*{address}">Ошибка адреса</span>
+                <br/>
+            </div>
+
+            <button type="submit">Отправить заказ</button>
+        </form>
+    </section>
+</main>
+
+<footer>
+    <p>© 2024 Магазин Строительных Материалов</p>
+</footer>
+</body>
+</html>

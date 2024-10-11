@@ -25,7 +25,6 @@ public class HomeController {
     @GetMapping("/")
     public String showHomePage(Model model) {
         model.addAttribute("storeTitle", "Building store");
-        model.addAttribute("welcomeMessage", "Welcome to our shop!");
         return "index";
     }
 }
