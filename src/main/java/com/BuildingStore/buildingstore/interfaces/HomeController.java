@@ -2,8 +2,6 @@ package com.BuildingStore.buildingstore.interfaces;
 import com.BuildingStore.buildingstore.materialRepository.MaterialRepository;
 
 import com.BuildingStore.buildingstore.model.Material;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,10 +14,12 @@ import java.util.List;
 @Controller
 public class HomeController {
     @Autowired
-    private  MaterialRepository materials= new MaterialRepository();
+    private MaterialRepository materialRepository;
     @ModelAttribute("productList")
     public List<Material> addMaterialsIntoModel() {
-        return materials.findAll();
+        List<Material> materials = new ArrayList<>();
+        materialRepository.findAll().forEach(materials::add);
+        return materials;
     }
 
     @GetMapping("/")

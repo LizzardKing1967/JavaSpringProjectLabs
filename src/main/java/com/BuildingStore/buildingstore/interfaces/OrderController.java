@@ -1,7 +1,9 @@
 package com.BuildingStore.buildingstore.interfaces;
 import com.BuildingStore.buildingstore.materialRepository.MaterialRepository;
+import com.BuildingStore.buildingstore.materialRepository.OrderRepository;
 import com.BuildingStore.buildingstore.model.Material;
-import com.BuildingStore.buildingstore.model.Order;
+import com.BuildingStore.buildingstore.model.CustomerOrder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -17,35 +19,46 @@ import jakarta.validation.Valid;
 public class OrderController {
 
     private final MaterialRepository materialRepository;
-
-    public OrderController(MaterialRepository materialRepository) {
+    private final OrderRepository orderRepository;
+    @Autowired
+    public OrderController(MaterialRepository materialRepository, OrderRepository orderRepository) {
         this.materialRepository = materialRepository;
+        this.orderRepository = orderRepository;
     }
 
     // Метод для отображения формы заказа с выбранным материалом
     @GetMapping("/order/new/{id}")
     public String showOrderForm(@PathVariable("id") Long materialId, Model model) {
-        Material selectedMaterial = materialRepository.findById(materialId); // Получаем материал по ID
-        Order order = new Order();
-        model.addAttribute("material", selectedMaterial);
-        order.setOrderMaterialId(materialId);
+        Material selectedMaterial = materialRepository.findById(materialId).orElse(null); // Получаем материал по ID
+        CustomerOrder order = new CustomerOrder();
+
+        if (selectedMaterial != null) {
+            order.setOrderMaterialId(materialId); // Устанавливаем ID материала в заказ
+            model.addAttribute("material", selectedMaterial);
+        } else {
+            // Обработка случая, когда материал не найден
+            model.addAttribute("error", "Material not found");
+            return "error"; // Предполагаем, что есть страница ошибки
+        }
+
         model.addAttribute("order", order);
         return "order-form"; // Возвращаем страницу с формой заказа
     }
 
     @PostMapping("/order/submit")
-    public String submitOrder(@Valid @ModelAttribute("order") Order order, Errors errors, Model model) {
-        Material material = materialRepository.findById(order.GetId());
+    public String submitOrder(@Valid @ModelAttribute("order") CustomerOrder order, Errors errors, Model model) {
+        Material material = materialRepository.findById(order.getOrderMaterialId()).orElse(null); // Получаем материал по ID
+
         if (errors.hasErrors()) {
             model.addAttribute("order", order);
             model.addAttribute("material", material);
             return "order-form"; // Возвращаем на форму, если есть ошибки
         }
 
-        // Загружаем материал по ID
+        // Здесь можно добавить логику для сохранения заказа, например, в базу данных
+        orderRepository.save(order); // Псевдокод для сохранения заказа
 
-
-        return "index"; // Перенаправление после успешного заказа
+        return "redirect:/"; // Перенаправление после успешного заказа
     }
 }
 

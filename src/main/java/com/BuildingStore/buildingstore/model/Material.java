@@ -1,48 +1,31 @@
 package com.BuildingStore.buildingstore.model;
 
+
+import jakarta.persistence.*;
 import lombok.Data;
 
-/*import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import javax.persistence.Id;*/
-
+@Entity
 @Data
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "material_type", discriminatorType = DiscriminatorType.STRING)
 public class Material {
-    private Long id; // Поле id для автоматической генерации
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; // Автоматическая генерация ID
     private String name;
     private String description;
     private double price;
-
     private double weight;
 
-    public Material(Long id,String name, String description, double price, double weight) {
+    public Material() { // Конструктор по умолчанию
+    }
+
+    public Material(Long id, String name, String description, double price, double weight) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.weight = weight;
-        this.id = id;
-    }
-
-    // Геттеры
-    public Long getId() {
-        return id; // Геттер для поля id
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public double getWeight() {
-        return weight;
     }
 
     @Override
