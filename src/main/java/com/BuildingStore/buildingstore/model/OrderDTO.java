@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
     // Конструктор
 public class OrderDTO {
-    private Long orderId; // ID заказа
+    private String orderId; // ID заказа
     private String materialName; // Название материала
     private String materialDescription; // Описание материала
     private String customerName;
@@ -12,7 +12,7 @@ public class OrderDTO {
     private int quantity; // Количество
 
     // Конструктор
-    public OrderDTO(Long orderId, String materialName, String materialDescription, String customerName, String adress, int quantity) {
+    public OrderDTO(String orderId, String materialName, String materialDescription, String customerName, String adress, int quantity) {
         this.orderId = orderId;
         this.materialName = materialName;
         this.materialDescription = materialDescription;
@@ -21,11 +21,11 @@ public class OrderDTO {
         this.adress = adress;
     }
 
-    public Long getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 

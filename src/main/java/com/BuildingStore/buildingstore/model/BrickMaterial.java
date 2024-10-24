@@ -1,20 +1,13 @@
 package com.BuildingStore.buildingstore.model;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import lombok.Data;
-
-import jakarta.persistence.*;
-
-@Entity
-
-@DiscriminatorValue("Brick")
+@Document(collection = "materials")
 public class BrickMaterial extends Material {
     public enum BrickType {
         RED, WHITE, FIREPROOF
     }
-
-    @Enumerated(EnumType.STRING)
     private BrickType brickType;
-    public BrickMaterial(Long id, String name, String description, double price, double weight, BrickType brickType) {
+    public BrickMaterial(String id, String name, String description, double price, double weight, BrickType brickType) {
         super(id, name, description, price, weight);
     }
 

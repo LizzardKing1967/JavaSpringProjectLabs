@@ -1,14 +1,13 @@
 package com.BuildingStore.buildingstore.model;
 
-import jakarta.persistence.*;
-import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@DiscriminatorValue("MetalSheet")  // Значение для столбца discriminator
+@Document(collection = "materials")
+
 public class MetalSheetMaterial extends Material {
 
     private double thickness;
-    public MetalSheetMaterial(Long id, String name, String description, double price, double weight, double thickness) {
+    public MetalSheetMaterial(String id, String name, String description, double price, double weight, double thickness) {
         super(id ,name, description, price, weight);
     }
 

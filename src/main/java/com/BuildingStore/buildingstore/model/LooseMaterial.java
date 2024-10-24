@@ -1,13 +1,11 @@
 package com.BuildingStore.buildingstore.model;
 
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import jakarta.persistence.*;
-
-@Entity
-@DiscriminatorValue("LooseMaterial")  // Значение для столбца discriminator
+@Document(collection = "materials")
 public class LooseMaterial extends Material {
 
-    public LooseMaterial(Long id, String name, String description, double price, double weight) {
+    public LooseMaterial(String id, String name, String description, double price, double weight) {
         super(id, name, description, price, weight);
     }
 

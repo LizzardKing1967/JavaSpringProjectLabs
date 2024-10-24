@@ -1,17 +1,13 @@
 package com.BuildingStore.buildingstore.model;
-
-
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.Data;
 
-@Entity
+@Document(collection = "materials")
 @Data
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "material_type", discriminatorType = DiscriminatorType.STRING)
 public class Material {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Автоматическая генерация ID
+    private String  id; // Автоматическая генерация ID
     private String name;
     private String description;
     private double price;
@@ -20,7 +16,7 @@ public class Material {
     public Material() { // Конструктор по умолчанию
     }
 
-    public Material(Long id, String name, String description, double price, double weight) {
+    public Material(String id, String name, String description, double price, double weight) {
         this.id = id;
         this.name = name;
         this.description = description;

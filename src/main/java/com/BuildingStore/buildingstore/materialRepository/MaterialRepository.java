@@ -1,10 +1,9 @@
 package com.BuildingStore.buildingstore.materialRepository;
 
 import com.BuildingStore.buildingstore.model.Material;
-import org.springframework.context.annotation.Primary;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MaterialRepository extends JpaRepository<Material, Long> {
+public interface MaterialRepository extends MongoRepository<Material, String> {
 }

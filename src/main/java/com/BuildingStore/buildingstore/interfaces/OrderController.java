@@ -32,7 +32,7 @@ public class OrderController {
 
     // Метод для отображения формы заказа с выбранным материалом
     @GetMapping("/order/new/{id}")
-    public String showOrderForm(@PathVariable("id") Long materialId, Model model) {
+    public String showOrderForm(@PathVariable("id") String materialId, Model model) {
         Material selectedMaterial = materialRepository.findById(materialId).orElse(null); // Получаем материал по ID
         CustomerOrder order = new CustomerOrder();
 
