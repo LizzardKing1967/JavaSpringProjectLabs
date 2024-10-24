@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Список Заказов</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<h1>Список Заказов</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID Заказа</th>
+        <th>Название Материала</th>
+        <th>Описание Материала</th>
+        <th>Заказ оформлен на:</th>
+        <th>Адрес выдачи</th>
+        <th>Количество</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${orders}">
+        <td th:text="${order.getOrderId}"></td>
+        <td th:text="${order.getMaterialName}"></td>
+        <td th:text="${order.getMaterialDescription}"></td>
+        <td th:text="${order.getCustomerName}"></td>
+        <td th:text="${order.getAdress}"></td>
+        <td th:text="${order.getQuantity}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/">На главную</a>
+</body>
+</html>

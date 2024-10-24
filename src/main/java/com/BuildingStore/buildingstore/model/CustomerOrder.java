@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -13,7 +12,7 @@ import jakarta.persistence.*;
 public class CustomerOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Автоматическая генерация ID
+    private Long id;
 
     @NotNull(message = "Материал должен быть выбран")
     private Long orderMaterialId; // ID материала
@@ -27,8 +26,6 @@ public class CustomerOrder {
 
     @NotEmpty(message = "Введите адрес")
     private String address;
-    // Геттеры и сеттеры
-
     public double calculateTotalPrice(MaterialRepository materialRepository) {
         Material material = materialRepository.findById(orderMaterialId).orElseThrow(() -> new RuntimeException("Material not found"));
         return material.getPrice() * quantity;

@@ -21,7 +21,6 @@ public class HomeController {
         materialRepository.findAll().forEach(materials::add);
         return materials;
     }
-
     @GetMapping("/")
     public String showHomePage(Model model) {
         model.addAttribute("storeTitle", "Building store");
