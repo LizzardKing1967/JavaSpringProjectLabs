@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.PostMapping;
             if (result.hasErrors()) {
                 return "register"; // Если есть ошибки, возвращаем на форму
             }
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user); // Сохраняем пользователя в базе данных
             return "redirect:/login"; // После успешной регистрации перенаправляем на страницу логина
         }

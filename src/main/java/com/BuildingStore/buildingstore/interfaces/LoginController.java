@@ -2,6 +2,7 @@ package com.BuildingStore.buildingstore.interfaces;
 
 import com.BuildingStore.buildingstore.services.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -15,10 +16,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @Controller
 public class LoginController {
 
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationProvider authenticationProvider;
 
-    public LoginController(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
+    public LoginController(AuthenticationProvider authenticationProvider) {
+        this.authenticationProvider = authenticationProvider;
     }
 
     @GetMapping("/login")
@@ -28,16 +29,12 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(@RequestParam String username, @RequestParam String password, Model model) {
-        System.out.println("1");
-
         try {
-
-            // Создаем токен для аутентификации
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(username, password);
 
             // Аутентифицируем пользователя
-            Authentication authentication = authenticationManager.authenticate(authenticationToken);
+            Authentication authentication = authenticationProvider.authenticate(authenticationToken);
 
             // Если аутентификация прошла успешно, сохраняем пользователя в контексте безопасности
             SecurityContextHolder.getContext().setAuthentication(authentication);
