@@ -6,9 +6,11 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import jakarta.persistence.*;
+import lombok.Getter;
 
-@Entity
+
 @Data
+@Entity
 public class CustomerOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +18,10 @@ public class CustomerOrder {
 
     @NotNull(message = "Материал должен быть выбран")
     private Long orderMaterialId; // ID материала
+
+    @Getter
+    @NotNull
+    private String username;
 
     @NotNull(message = "Количество должно быть указано")
     @Positive(message = "Количество должно быть положительным")

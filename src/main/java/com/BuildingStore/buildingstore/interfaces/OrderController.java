@@ -5,6 +5,8 @@ import com.BuildingStore.buildingstore.model.Material;
 import com.BuildingStore.buildingstore.model.CustomerOrder;
 import com.BuildingStore.buildingstore.model.OrderDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -48,22 +50,33 @@ public class OrderController {
         model.addAttribute("order", order);
         return "order-form"; // Возвращаем страницу с формой заказа
     }
-
+    @ModelAttribute("order")
+    public CustomerOrder populateOrderWithUsername(CustomerOrder order) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        order.setUsername(currentUsername);
+        return order;
+    }
     @PostMapping("/order/submit")
     public String submitOrder(@Valid @ModelAttribute("order") CustomerOrder order, Errors errors, Model model) {
-        Material material = materialRepository.findById(order.getOrderMaterialId()).orElse(null); // Получаем материал по ID
-
+        Material material = materialRepository.findById(order.getOrderMaterialId()).orElse(null);
+        orderRepository.save(order); // Сохраняем заказ
         if (errors.hasErrors()) {
             model.addAttribute("order", order);
             model.addAttribute("material", material);
-            return "order-form"; // Возвращаем на форму, если есть ошибки
+            return "order-form"; // Возвращаем на форму с ошибками
         }
-        orderRepository.save(order);
-        return "redirect:/order-list"; // Перенаправление на метод showOrders    }
+        return "redirect:/order-list"; // Перенаправляем на список заказов
     }
+
     @GetMapping("/order-list")
     public String showOrders(Model model) {
-        List<CustomerOrder> orders = orderRepository.findAll(); // Получаем все заказы
+        // Получаем текущего пользователя
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+
+        // Фильтруем заказы по пользователю
+        List<CustomerOrder> orders = orderRepository.findByUsername(currentUsername);
         List<OrderDTO> orderDTOs = new ArrayList<>();
         for (CustomerOrder order : orders) {
             Material material = materialRepository.findById(order.getOrderMaterialId()).orElse(null);
@@ -79,7 +92,7 @@ public class OrderController {
             }
         }
         model.addAttribute("orders", orderDTOs);
-        return "order-list"; // Возвращаем имя шаблона для отображения
+        return "order-list";
     }
 
 

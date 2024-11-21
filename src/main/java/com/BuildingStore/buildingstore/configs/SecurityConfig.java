@@ -3,6 +3,7 @@ package com.BuildingStore.buildingstore.configs;
 import com.BuildingStore.buildingstore.services.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -41,17 +42,15 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         return new UserService();
     }
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/css/**", "/js/**", "/images/**");
-    }
 
+    @Profile("dev")
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain devSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/login",  "/login?error=true", "/register", "/h2-console/**").permitAll()  // Разрешаем доступ к консоли H2
+                                .requestMatchers("/login",  "/login?error=true", "/register", "/styles", "/h2-console/**").permitAll()
+                                .requestMatchers(org.springframework.boot.autoconfigure.security.servlet.PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                 .anyRequest().authenticated()  // Все остальные запросы требуют авторизации
                 )
                 .formLogin(form -> form
@@ -61,6 +60,7 @@ public class SecurityConfig {
                         .failureUrl("/login?error=true") // Указываем, куда перенаправить при неудачной авторизации
                         .defaultSuccessUrl("/", true)  // Указываем страницу после успешного логина
                 )
+
 
                 .logout(logout -> logout.permitAll())  // Разрешаем выход для всех
                 .csrf(csrf -> csrf
@@ -73,6 +73,31 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+    @Profile("prod")
+    @Bean
+    public SecurityFilterChain prodSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeRequests(authorizeRequests ->
+                        authorizeRequests
+                                .requestMatchers("/login",  "/login?error=true", "/register", "/styles").permitAll()
+                                .requestMatchers(org.springframework.boot.autoconfigure.security.servlet.PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                                .anyRequest().authenticated()  // Все остальные запросы требуют авторизации
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")  // Указываем путь к странице логина
+                        .loginProcessingUrl("/login")  // Указывает, куда отправляется POST-запрос
+                        .permitAll()  // Доступность страницы логина для всех
+                        .failureUrl("/login?error=true") // Указываем, куда перенаправить при неудачной авторизации
+                        .defaultSuccessUrl("/", true)  // Указываем страницу после успешного логина
+                )
+                .logout(logout -> logout.permitAll())
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/register", "/", "/order-form/**", "/order-list/**")  // Откл  // Отключаем CSRF для H2
+                );// Отключаем CSRF
+        return http.build();
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
