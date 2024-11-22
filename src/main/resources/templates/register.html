@@ -19,8 +19,8 @@
 </header>
 
 <main>
-    <h2>Регистрация</h2>
     <form action="/register" method="post">
+        <h2>Регистрация</h2>
         <label for="username">Имя пользователя:</label>
         <input type="text" id="username" name="username" required>
 
@@ -28,15 +28,17 @@
         <input type="password" id="password" name="password" required>
 
         <button type="submit">Зарегистрироваться</button>
+        <div th:if="${errorMessage != null}" class="validationError">
+            <p th:text="${errorMessage}"></p>
+        </div>
     </form>
 
-    <div th:if="${errorMessage != null}" class="validationError">
-        <p th:text="${errorMessage}"></p>
-    </div>
+
 </main>
 
 <footer>
     <p>© 2024 Магазин Строительных Материалов</p>
+    <p><a th:href="@{/contact}">Свяжитесь с нами</a></p>
 </footer>
 </body>
 </html>

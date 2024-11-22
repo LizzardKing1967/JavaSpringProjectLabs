@@ -20,8 +20,9 @@
     </nav>
     <h1 th:text="${storeTitle}">Заголовок Магазина</h1>
 </header>
-<h2>Login</h2>
+<main>
 <form action="/login" method="post">
+    <h2>Login</h2>
     <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" required>
@@ -30,12 +31,15 @@
     <input type="password" id="password" name="password" required>
 
     <button type="submit">Login</button>
+    <div style="color: red;" th:if="${param.error != null}">
+        Invalid username or password. Please try again.
+    </div>
+    <p>Don't have an account? <a href="/register">Register here</a></p>
 </form>
-
-<!-- Показываем ошибку, если она есть -->
-<div style="color: red;" th:if="${param.error != null}">
-    Invalid username or password. Please try again.
-</div>
-<p>Don't have an account? <a href="/register">Register here</a></p>
+</main>>
+<footer>
+    <p>© 2024 Магазин Строительных Материалов</p>
+    <p><a th:href="@{/contact}">Свяжитесь с нами</a></p>
+</footer>
 </body>
 </html>

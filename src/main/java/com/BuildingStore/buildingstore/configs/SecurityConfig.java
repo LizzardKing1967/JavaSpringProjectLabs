@@ -49,7 +49,7 @@ public class SecurityConfig {
         http
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/login",  "/login?error=true", "/register", "/styles", "/h2-console/**").permitAll()
+                                .requestMatchers("/login",  "/login?error=true", "/register","/static/**", "/styles/**",  "/css", "/h2-console/**").permitAll()
                                 .requestMatchers(org.springframework.boot.autoconfigure.security.servlet.PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                 .anyRequest().authenticated()  // Все остальные запросы требуют авторизации
                 )
@@ -101,10 +101,8 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers(
-                "/css/**",
-                "/js/**",
-                "/images/**",
-                "/styles"
+
+                "/styles/", "/static/**", "/css", "/styles/**", "/static/**", "/css"
         );
     }
     @Bean
