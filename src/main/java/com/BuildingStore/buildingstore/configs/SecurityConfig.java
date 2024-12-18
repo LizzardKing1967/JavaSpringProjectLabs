@@ -49,9 +49,8 @@ public class SecurityConfig {
         http
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/login",  "/login?error=true", "/register","/static/**", "/styles/**",  "/css", "/h2-console/**").permitAll()
                                 .requestMatchers(org.springframework.boot.autoconfigure.security.servlet.PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                                .anyRequest().authenticated()  // Все остальные запросы требуют авторизации
+                                .anyRequest().permitAll()  // Все остальные запросы требуют авторизации
                 )
                 .formLogin(form -> form
                         .loginPage("/login")  // Указываем путь к странице логина
@@ -62,9 +61,15 @@ public class SecurityConfig {
                 )
 
 
-                .logout(logout -> logout.permitAll())  // Разрешаем выход для всех
+                .logout(logout -> logout.logoutUrl("/logout") // URL для выхода
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
+                        .logoutSuccessUrl("/") // URL, куда перенаправить после выхода
+
+                )
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/h2-console/**", "/register", "/")  // Откл  // Отключаем CSRF для H2
+                        .ignoringRequestMatchers("/h2-console/**", "/register", "/", "/api/**")  // Откл  // Отключаем CSRF для H2
                 )// Отключаем CSRF
                 .headers(headers -> headers
                         .contentSecurityPolicy(csp -> csp
@@ -80,7 +85,7 @@ public class SecurityConfig {
         http
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/login",  "/login?error=true", "/register", "/styles").permitAll()
+                                .requestMatchers("/login",  "/login?error=true", "/register", "/static/**", "/styles/**",  "/css").permitAll()
                                 .requestMatchers(org.springframework.boot.autoconfigure.security.servlet.PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                 .anyRequest().authenticated()  // Все остальные запросы требуют авторизации
                 )
@@ -91,20 +96,18 @@ public class SecurityConfig {
                         .failureUrl("/login?error=true") // Указываем, куда перенаправить при неудачной авторизации
                         .defaultSuccessUrl("/", true)  // Указываем страницу после успешного логина
                 )
-                .logout(logout -> logout.permitAll())
+                .logout(logout -> logout.logoutUrl("/logout") // URL для выхода
+                        .logoutSuccessUrl("/") // URL, куда перенаправить после выхода
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
+                )
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/register", "/", "/order-form/**", "/order-list/**")  // Откл  // Отключаем CSRF для H2
+                        .ignoringRequestMatchers("/register", "/", "/order-form/**", "/order-list/**", "/api/**")  // Откл  // Отключаем CSRF для H2
                 );// Отключаем CSRF
         return http.build();
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers(
-
-                "/styles/", "/static/**", "/css", "/styles/**", "/static/**", "/css"
-        );
-    }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

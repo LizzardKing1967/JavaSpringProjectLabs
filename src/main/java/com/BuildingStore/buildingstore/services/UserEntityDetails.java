@@ -18,8 +18,6 @@ public class UserEntityDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // В вашем случае можно добавить роли, если они есть в UserEntity.
-        // Здесь создаётся простая роль ADMIN, но можно адаптировать под ваш бизнес.
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 

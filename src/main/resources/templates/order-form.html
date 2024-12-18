@@ -5,7 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Оформление заказа</title>
     <link rel="stylesheet" href="/styles/styles.css">
-    <script src="/order.js" defer></script>
+    <script defer>
+        async function submitOrder(event) {
+            event.preventDefault(); // Отключаем стандартное поведение формы
+
+            // Собираем данные из формы
+            const orderData = {
+                orderMaterialId: document.querySelector('#orderMaterialId').value,
+                quantity: document.querySelector('#quantity').value,
+                customerName: document.querySelector('#customerName').value,
+                address: document.querySelector('#address').value
+            };
+
+            try {
+                // Отправляем JSON на сервер
+                const response = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    alert('Заказ успешно создан: ID ' + result.id);
+                } else {
+                    alert('Ошибка при создании заказа: ' + response.statusText);
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('Произошла ошибка при отправке заказа.');
+            }
+        }
+    </script>
 </head>
 <body>
 <header>
@@ -24,8 +57,8 @@
 
 <main>
     <section>
-        <form method="POST" th:action="@{/order/submit}" th:object="${order}">
-            <input type="hidden" th:field="*{orderMaterialId}">
+        <form id="orderForm" onsubmit="submitOrder(event)">
+            <input type="hidden" id="orderMaterialId" th:value="${material.id}">
             <h2 th:text="${material.name}">Название материала</h2>
             <p th:text="${material.description}">Описание материала</p>
             <p th:text="'Вес: ' + ${material.weight} + ' кг'">Вес материала</p>
@@ -33,28 +66,19 @@
 
             <div>
                 <label for="quantity">Количество:</label>
-                <input type="number" id="quantity" th:field="*{quantity}" required oninput="updateTotalPrice()" />
-                <span class="validationError"
-                      th:if="${#fields.hasErrors('quantity')}"
-                      th:errors="*{quantity}">Ошибка количества</span>
+                <input type="number" id="quantity" required oninput="updateTotalPrice()" />
                 <br/>
             </div>
 
             <div>
                 <label for="customerName">Имя:</label>
-                <input type="text" id="customerName" th:field="*{customerName}" required />
-                <span class="validationError"
-                      th:if="${#fields.hasErrors('customerName')}"
-                      th:errors="*{customerName}">Ошибка имени</span>
+                <input type="text" id="customerName" required />
                 <br/>
             </div>
 
             <div>
                 <label for="address">Адрес:</label>
-                <input type="text" id="address" th:field="*{address}" required />
-                <span class="validationError"
-                      th:if="${#fields.hasErrors('address')}"
-                      th:errors="*{address}">Ошибка адреса</span>
+                <input type="text" id="address" required />
                 <br/>
             </div>
 

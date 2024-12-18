@@ -4,9 +4,12 @@ import com.BuildingStore.buildingstore.materialRepository.OrderRepository;
 import com.BuildingStore.buildingstore.model.Material;
 import com.BuildingStore.buildingstore.model.CustomerOrder;
 import com.BuildingStore.buildingstore.model.OrderDTO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -94,7 +97,12 @@ public class OrderController {
         model.addAttribute("orders", orderDTOs);
         return "order-list";
     }
-
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+        logoutHandler.logout(request, response, null);
+        return "redirect:/login?logout";
+    }
 
 }
 

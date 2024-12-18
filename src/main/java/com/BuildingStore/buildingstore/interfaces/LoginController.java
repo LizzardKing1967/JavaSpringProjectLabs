@@ -1,6 +1,8 @@
 package com.BuildingStore.buildingstore.interfaces;
 
 import com.BuildingStore.buildingstore.services.UserService;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.net.http.HttpRequest;
 
 
 @Controller
@@ -47,5 +51,9 @@ public class LoginController {
             model.addAttribute("error", "Invalid username or password");
             return "login"; // Возвращаем страницу логина с ошибкой
         }
+
+
     }
+
+
 }
